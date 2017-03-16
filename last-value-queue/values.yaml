@@ -1,0 +1,32 @@
+# Default values for last-value-queue.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+replicaCount: 1
+
+activemq-artemis:
+  brokers:
+    broker-01.xml: |
+      <configuration xmlns="urn:activemq"
+                       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                       xsi:schemaLocation="urn:activemq /schema/artemis-configuration.xsd">
+
+            <core xmlns="urn:activemq:core">
+            <persistence-enabled>false</persistence-enabled>
+            <address-settings>
+               <!--default for catch all-->
+               <address-setting match="mcm.state.*">
+                  <dead-letter-address>jms.queue.DLQ</dead-letter-address>
+                  <expiry-address>jms.queue.ExpiryQueue</expiry-address>
+                  <redelivery-delay>0</redelivery-delay>
+                  <!-- with -1 only the global-max-size is in use for limiting -->
+                  <last-value-queue>true</last-value-queue>
+                   <max-size-bytes>-1</max-size-bytes>
+                  <message-counter-history-day-limit>10</message-counter-history-day-limit>
+                  <address-full-policy>PAGE</address-full-policy>
+               </address-setting>
+            </address-settings>
+
+
+            </core>
+
+          </configuration>
